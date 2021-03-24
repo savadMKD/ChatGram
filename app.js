@@ -7,6 +7,8 @@ var logger = require("morgan");
 
 const hbs = require("express-handlebars");
 const mongoose = require("mongoose");
+const flash = require("connect-flash");
+const session = require("express-session");
 
 var userRouter = require("./routes/user");
 
@@ -35,6 +37,25 @@ mongoose.connect(process.env.MONGO_URL, {
 mongoose.connection.once("open", (err) => {
   if (!err) console.log("Database Connected Successfully");
   else console.log(`Something Happened To Database: ${err}`);
+});
+
+// Express Session
+app.use(
+  session({
+    secret: process.env.COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
+app.use(flash()); // Connect Flash
+
+// Global Variables
+app.use(function (req, res, next) {
+  res.locals.success_msg = req.flash("success_msg");
+  res.locals.error_msg = req.flash("error_msg");
+  res.locals.error = req.flash("error");
+  next();
 });
 
 app.use(logger("dev"));

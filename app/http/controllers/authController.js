@@ -1,3 +1,6 @@
+const User = require("../../models/User");
+const bcrypt = require("bcryptjs");
+
 function authController() {
   return {
     doLogin: (req, res) => {
@@ -24,7 +27,33 @@ function authController() {
       if (errors.length > 0) {
         res.render("auth/register", { errors, username, email, password });
       } else {
-        res.send("Validation Passed");
+        User.findOne({ email: email }).then((user) => {
+          if (user) {
+            errors.push({ message: "This Email is Already Registered" });
+            res.render("auth/register", { errors, username, email, password });
+          } else {
+            const newUser = new User({ username, email, password });
+
+            // Hash Password
+            bcrypt.genSalt(10, (err, salt) => {
+              bcrypt.hash(newUser.password, salt, (err, hash) => {
+                if (err) throw err;
+                newUser.password = hash;
+
+                newUser
+                  .save()
+                  .then((user) => {
+                    req.flash(
+                      "success_msg",
+                      "You are Registered, You Can Login"
+                    );
+                    res.redirect("/login");
+                  })
+                  .catch((err) => console.log(err));
+              });
+            });
+          }
+        });
       }
     },
   };

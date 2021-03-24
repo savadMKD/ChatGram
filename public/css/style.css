@@ -70,7 +70,13 @@ img {
 
 .alert {
   padding: 10px;
-  background: rgb(240, 173, 78, 0.5);
   width: 100%;
   margin: 5px;
+}
+
+.alert.alert-warning {
+  background: rgb(240, 173, 78, 0.5);
+}
+.alert.alert-success {
+  background: rgba(97, 240, 78, 0.5);
 }
