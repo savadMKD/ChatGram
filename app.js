@@ -1,3 +1,4 @@
+require("dotenv").config();
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
@@ -5,6 +6,7 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
 const hbs = require("express-handlebars");
+const mongoose = require("mongoose");
 
 var userRouter = require("./routes/user");
 
@@ -22,6 +24,18 @@ app.engine(
     partialsDir: __dirname + "/views/partials/",
   })
 );
+
+// Database Connection
+mongoose.connect(process.env.MONGO_URL, {
+  useUnifiedTopology: true,
+  useFindAndModify: true,
+  useNewUrlParser: true,
+  useCreateIndex: true,
+});
+mongoose.connection.once("open", (err) => {
+  if (!err) console.log("Database Connected Successfully");
+  else console.log(`Something Happened To Database: ${err}`);
+});
 
 app.use(logger("dev"));
 app.use(express.json());
