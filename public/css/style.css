@@ -67,3 +67,10 @@ img {
   margin-left: 91px;
   text-decoration: none;
 }
+
+.alert {
+  padding: 10px;
+  background: rgb(240, 173, 78, 0.5);
+  width: 100%;
+  margin: 5px;
+}

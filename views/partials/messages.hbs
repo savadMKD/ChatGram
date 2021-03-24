@@ -1,0 +1,8 @@
+{{!-- Form Validation --}}
+{{#if errors}}
+{{#each errors}}
+<div class="alert alert-warning" id="alert">
+    {{message}}
+</div>
+{{/each}}
+{{/if}}
