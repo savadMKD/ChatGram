@@ -1,11 +1,21 @@
 const User = require("../../models/User");
 const bcrypt = require("bcryptjs");
+const passport = require("passport");
 
 function authController() {
   return {
     doLogin: (req, res) => {
       res.render("auth/login");
     },
+
+    postLogin: (req, res, next) => {
+      passport.authenticate("local", {
+        failureRedirect: "/login",
+        successRedirect: "/",
+        failureFlash: true,
+      })(req, res, next);
+    },
+
     doRegister: (req, res) => {
       res.render("auth/register");
     },

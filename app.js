@@ -9,6 +9,7 @@ const hbs = require("express-handlebars");
 const mongoose = require("mongoose");
 const flash = require("connect-flash");
 const session = require("express-session");
+const passport = require("passport");
 
 var userRouter = require("./routes/user");
 
@@ -39,6 +40,9 @@ mongoose.connection.once("open", (err) => {
   else console.log(`Something Happened To Database: ${err}`);
 });
 
+// Passport Config
+require("./app/config/passport")(passport);
+
 // Express Session
 app.use(
   session({
@@ -47,6 +51,10 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(flash()); // Connect Flash
 
